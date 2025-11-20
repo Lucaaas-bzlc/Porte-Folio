@@ -1,118 +1,228 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio - Lucas</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lucas Bouzeloc — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f7f7f7;
-      color: #333;
-      line-height: 1.6;
+    :root{
+      --bg:#f6f9fb; /* very light gray-blue */
+      --card:#ffffff;
+      --muted:#9aa9b3;
+      --accent:#bcdff9; /* light blue pastel */
+      --accent-2:#e7f3fb;
+      --text:#0f1720;
+      --glass: rgba(255,255,255,0.7);
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
     }
-    header {
-      background: #222;
-      color: #fff;
-      padding: 2rem;
-      text-align: center;
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#eef6fb);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+
+    /* Page wrapper */
+    .wrap{max-width:1100px;margin:28px auto;padding:20px}
+
+    /* Header */
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+    .avatar{width:84px;height:84px;border-radius:14px;overflow:hidden;flex:0 0 84px;background:var(--accent-2);display:flex;align-items:center;justify-content:center}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    header h1{font-size:20px;margin:0}
+    header p{margin:0;color:var(--muted);font-size:14px}
+
+    /* Mindmap card */
+    .mindmap-card{position:relative;background:var(--card);border-radius:18px;padding:36px;box-shadow:0 6px 20px rgba(17,24,39,0.06)}
+    .center{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+    .center .photo{width:140px;height:140px;border-radius:20px;overflow:hidden;box-shadow:0 6px 18px rgba(11,22,40,0.06)}
+    .photo img{width:100%;height:100%;object-fit:cover}
+    .center h2{margin:0;font-size:18px}
+    .center small{color:var(--muted)}
+
+    /* Bubbles */
+    .bubble{position:absolute;min-width:130px;padding:12px 14px;border-radius:999px;background:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(11,22,40,0.06);transition:transform .22s ease,box-shadow .22s ease}
+    .bubble:active{transform:scale(.98)}
+    .bubble:hover{transform:translateY(-6px)}
+    .bubble small{display:block;font-size:13px;color:var(--text);font-weight:600}
+
+    /* Positions on desktop */
+    .b1{top:28px;left:18px}
+    .b2{top:28px;right:18px}
+    .b3{bottom:28px;left:18px}
+    .b4{bottom:28px;right:18px}
+    .b5{left:50%;top:8%;transform:translateX(-50%)}
+
+    /* Sections - detailed content */
+    main section{margin-top:20px;background:transparent}
+    .detail{margin-top:22px;padding:22px;background:var(--card);border-radius:14px;box-shadow:0 6px 18px rgba(11,22,40,0.04)}
+    .detail h3{margin-top:0}
+    .detail p{line-height:1.55;color:#24303a}
+
+    /* Layout for detail inner content */
+    .detail-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
+    .detail-grid img{width:100%;border-radius:12px;object-fit:cover}
+
+    /* Responsive */
+    @media (max-width:880px){
+      .wrap{padding:12px}
+      .mindmap-card{padding:20px}
+      .center .photo{width:110px;height:110px}
+      .bubble{position:relative;margin:10px auto;min-width:86%;border-radius:12px}
+      .b1,.b2,.b3,.b4,.b5{position:static;transform:none}
+      .detail-grid{grid-template-columns:1fr}
     }
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
-    header p {
-      font-size: 1.2rem;
-      margin-top: 0.5rem;
-    }
-    section {
-      padding: 3rem 10%;
-      max-width: 1000px;
-      margin: auto;
-    }
-    h2 {
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.5rem;
-      color: #444;
-    }
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    footer {
-      background: #222;
-      color: #fff;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
-    }
+
+    /* Smooth scroll & anchor highlight */
+    html{scroll-behavior:smooth}
+    .nav-indicator{display:inline-block;margin-left:8px;font-size:12px;color:var(--muted)}
+
+    /* Small helper */
+    .hint{font-size:13px;color:var(--muted);margin-top:8px}
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div class="avatar" aria-hidden="true">
+        <!-- Remplacez 'photo.jpg' par votre vraie photo -->
+        <img src="photo.jpg" alt="Photo de Lucas Bouzeloc">
+      </div>
+      <div>
+        <h1>Lucas Bouzeloc</h1>
+        <p>Portfolio — CV interactif (QR-friendly)</p>
+      </div>
+    </header>
 
-  <header>
-    <h1>Lucas Bouzeloc en quelques pages...</h1>
-    <p> Étudiant en commerce, passionné par son sport </p>
-  </header>
+    <div class="mindmap-card" role="navigation" aria-label="Carte mentale de navigation">
+      <div class="center">
+        <div class="photo"><img src="photo.jpg" alt="Photo de Lucas"></div>
+        <h2>Bienvenue — Découvrez mon parcours</h2>
+        <small>Cliquez sur une bulle pour afficher les détails</small>
+      </div>
 
-  <section>
-    <h2>Qui suis-je ?</h2>
-    <div class="card">
-      <p><strong>Présentation :</strong><br>
-      Moi c'est Lucas, si je devais me décrire en quelques phrases et bien je commencerais par dire que je suis quelqu’un de nature heureuse et qui voit la vie comme un cadeau qui se doit d’être vécu à fond. Je suis assez déterminé et lorsque j’ai un objectif en tête je mets tout en œuvre pour réussir quitte à sacrifier certaines choses.</p>
-      
-      <p><strong>Trois mots pour ma personnalité professionnelle :</strong><br>
-      Déterminé, ambitieux et rigoureux.</p>
+      <!-- Bubbles linking to sections below -->
+      <div class="bubble b1" data-target="#passion" tabindex="0" role="link" aria-label="Ma Passion">Ma Passion</div>
+      <div class="bubble b2" data-target="#experiences" tabindex="0" role="link" aria-label="Mes Expériences Professionnelles">Mes Expériences<br><small style="font-weight:600">Professionnelles</small></div>
+      <div class="bubble b3" data-target="#formation" tabindex="0" role="link" aria-label="Ma Formation">Ma Formation</div>
+      <div class="bubble b4" data-target="#competences" tabindex="0" role="link" aria-label="Mes Compétences et Valeurs">Mes Compétences<br><small style="font-weight:600">et Valeurs</small></div>
+      <div class="bubble b5" data-target="#anecdote" tabindex="0" role="link" aria-label="Une Anecdote">Une Anecdote</div>
 
-      <p><strong>Mes valeurs principales :</strong><br>
-      Ambition, rigueur, curiosité, détermination et productivité.</p>
-
-      <p><strong>Anecdote :</strong><br>
-      Je pense qu’une anecdote qui m’illustre bien concerne mon sport le Volley-Ball, j’ai commencé ce sport qui est devenu ma passion en 2019 au collège, au bout de 2 mois je me suis cassé le bras donc j’ai dû arrêter pendant 4 mois, à mon retour en 2020 le COVID est apparut et m’a donc également empêché de poursuivre ma pratique jusqu’en 2021 environ. Malgré cela j’ai toujours voulu pratiquer ce sport, depuis ce moment je n’ai jamais cessé de jouer dans le but de m’améliorer et de gravir les niveaux dans le but d’atteindre un niveau national. Cette année j’ai enfin sauté le pas de quitter mon club dans lequel j’avais fais mes débuts pour aller dans un nouveau club pour jouer à un meilleur niveau. Mes objectifs ne sont pas encore atteints mais j’y compte bien.</p>
+      <p class="hint">Astuce : sur mobile, faites défiler pour voir les sections détaillées.</p>
     </div>
-  </section>
 
-  <section>
-    <h2>Parcours</h2>
-    <div class="card">
-      <p><strong>Diplômes et formations :</strong><br>
-      J’ai le BAC Général avec les spécialités Maths et SES, j’ai également un DUST en commercialisation que j’ai obtenu à l’ILEPS.</p>
+    <main>
+      <!-- Passion -->
+      <section id="passion">
+        <div class="detail">
+          <div class="detail-grid">
+            <div>
+              <h3>Ma Passion — le Volley-Ball</h3>
+              <p>Ma Passion, le Volley-Ball</p>
+              <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
+            </div>
+            <div>
+              <img src="volley.jpg" alt="Photo volley">
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <p><strong>Matière ou projet scolaire marquant :</strong><br>
-      Récemment j’ai eu un intervenant qui est un vrai business man qui a su faire les bons paris au bon moment et qui a su tout investir dans ses projets, aujourd’hui il a plusieurs entreprises qui tournent, il a donc beaucoup de temps libre pour ses loisirs.</p>
+      <!-- Formation -->
+      <section id="formation">
+        <div class="detail">
+          <h3>Ma Formation</h3>
+          <div class="detail-grid">
+            <div>
+              <p>Ma Formation</p>
+              <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
+            </div>
+            <div>
+              <img src="formation.jpg" alt="Illustration formation">
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <p><strong>Projets associatifs, sportifs, culturels, bénévoles :</strong><br>
-      J’ai été coach d’une équipe de jeunes pendant un an, cette expérience m’a permis de voir à quel point l’adaptabilité est une compétence importante pour pouvoir amener les gens où on veut les emmener.</p>
+      <!-- Experiences Professionnelles -->
+      <section id="experiences">
+        <div class="detail">
+          <h3>Mes Expériences Professionnelles</h3>
+          <div class="detail-grid">
+            <div>
+              <p>Mes Expériences Professionnelles</p>
+              <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
+            </div>
+            <div>
+              <img src="experiences.jpg" alt="Illustration expériences">
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <p><strong>Expériences professionnelles :</strong><br>
-      L’année dernière lors d’un cours concernant la mise en place d’évènement mon groupe et moi avons organisé un grand évènement autour de la venue d’un célèbre rappeur français, cet évènement m’a beaucoup appris sur l’organisation et sur le fait de prévoir un maximum les éventualités.</p>
-    </div>
-  </section>
+      <!-- Competences et Valeurs -->
+      <section id="competences">
+        <div class="detail">
+          <h3>Mes compétences et Valeurs</h3>
+          <div class="detail-grid">
+            <div>
+              <p>Au fil de mon parcours, j’ai développé un ensemble de compétences et de valeurs qui me 
+                définissent aujourd’hui autant sur le plan professionnel que personnel. Ma rigueur s’est affirmée 
+                grâce à mes études et à mon expérience en alternance, où l’organisation et la précision étaient 
+                essentielles. Mon ambition, elle, se nourrit de ma volonté constante de progresser, que ce soit dans 
+                le sport ou dans mes projets professionnels. Le volley m’a appris la valeur du partage et de l’esprit 
+                d’équipe, des qualités que je considère indispensables pour atteindre des objectifs communs. Le 
+                coaching, quant à lui, m’a permis de renforcer ma patience et ma capacité à accompagner les 
+                autres dans leur progression. Enfin, mes différentes expériences m’ont appris à m’adapter à toutes 
+                les situations, à rester réactif face aux imprévus et à toujours chercher à tirer le meilleur de chaque 
+                opportunité. Ces qualités sont aujourd’hui au cœur de ma façon de travailler et d’évoluer.</p>
+              <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
+            </div>
+            <div>
+              <img src="competences.jpg" alt="Illustration compétences">
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <section>
-    <h2>Compétences</h2>
-    <div class="card">
-      <p><strong>Compétences pratiques développées dans mes études :</strong><br>
-      Communication, gestion de projet, gestion humaine, l’analyse, l’adaptabilité en fonction des situations.</p>
+      <!-- Anecdote -->
+      <section id="anecdote">
+        <div class="detail">
+          <h3>Anecdote</h3>
+          <div class="detail-grid">
+            <div>
+              <p>Une anecdote qui me représente bien est liée à ma passion pour le volley-ball. J’ai découvert ce 
+                sport en 2019, au collège, et il est rapidement devenu une véritable vocation. Malheureusement, 
+                après seulement deux mois de pratique, une fracture au bras m’a contraint à m’arrêter pendant 
+                plusieurs mois. À mon retour, la crise sanitaire liée au Covid-19 a de nouveau interrompu mon 
+                parcours sportif jusqu’en 2021 environ. Malgré ces obstacles, ma motivation n’a jamais faibli. 
+                Depuis, je n’ai cessé de m’entraîner avec détermination, animé par l’envie de progresser et 
+                d’atteindre un niveau national. Cette année, j’ai franchi une nouvelle étape en quittant mon club 
+                formateur pour rejoindre une équipe évoluant à un niveau supérieur. Mes objectifs ne sont pas 
+                encore atteints, mais je suis pleinement engagé à continuer de m’entraîner pour y parvenir.</p>
+              <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
+            </div>
+            <div>
+              <img src="anecdote.jpg" alt="Illustration anecdote">
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <p><strong>Soft skills (compétences personnelles) :</strong><br>
-      Organisation, esprit d’équipe, ambition, adaptabilité, rigueur et la patience.</p>
+    </main>
+  </div>
 
-      <p><strong>Outils et logiciels maîtrisés :</strong><br>
-      Canva, Pack Office et ChatGPT ou d’autres logiciels d’IA.</p>
-    </div>
-  </section>
+  <script>
+    // Scroll to the target section when clicking bubbles
+    document.querySelectorAll('.bubble').forEach(b => {
+      b.addEventListener('click', ()=>{
+        const t = document.querySelector(b.dataset.target);
+        if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      b.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') b.click(); });
+    });
 
-  <footer>
-    <p>© 2025 - Portfolio de Lucas</p>
-  </footer>
-
+    // Improve focus outline for keyboard users
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Tab') document.body.classList.add('show-focus'); });
+  </script>
 </body>
 </html>
-
