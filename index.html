@@ -8,106 +8,285 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f6f9fb; /* very light gray-blue */
+      --bg:#f6f9fb;
       --card:#ffffff;
       --muted:#9aa9b3;
-      --accent:#bcdff9; /* light blue pastel */
+      --accent:#bcdff9;
       --accent-2:#e7f3fb;
       --text:#0f1720;
-      --glass: rgba(255,255,255,0.7);
+      --gray-pastel:#d4dce3;
       font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#eef6fb);color:var(--text)}
     a{color:inherit;text-decoration:none}
 
-    /* Page wrapper */
     .wrap{max-width:1100px;margin:28px auto;padding:20px}
 
-    /* Header */
-    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
-    .avatar{width:84px;height:84px;border-radius:14px;overflow:hidden;flex:0 0 84px;background:var(--accent-2);display:flex;align-items:center;justify-content:center}
-    .avatar img{width:100%;height:100%;object-fit:cover}
-    header h1{font-size:20px;margin:0}
-    header p{margin:0;color:var(--muted);font-size:14px}
-
     /* Mindmap card */
-    .mindmap-card{position:relative;background:var(--card);border-radius:18px;padding:36px;box-shadow:0 6px 20px rgba(17,24,39,0.06)}
-    .center{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
-    .center .photo{width:140px;height:140px;border-radius:20px;overflow:hidden;box-shadow:0 6px 18px rgba(11,22,40,0.06)}
-    .photo img{width:100%;height:100%;object-fit:cover}
-    .center h2{margin:0;font-size:18px}
-    .center small{color:var(--muted)}
+    .mindmap-card{
+      position:relative;
+      background:var(--card);
+      border-radius:18px;
+      padding:60px 20px;
+      box-shadow:0 6px 20px rgba(17,24,39,0.06);
+      min-height:500px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-    /* Bubbles */
-    .bubble{position:absolute;min-width:130px;padding:12px 14px;border-radius:999px;background:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(11,22,40,0.06);transition:transform .22s ease,box-shadow .22s ease}
-    .bubble:active{transform:scale(.98)}
-    .bubble:hover{transform:translateY(-6px)}
-    .bubble small{display:block;font-size:13px;color:var(--text);font-weight:600}
+    /* Center node */
+    .center-node{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
+      text-align:center;
+      z-index:10;
+    }
+    
+    .center-photo{
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      overflow:hidden;
+      box-shadow:0 8px 24px rgba(11,22,40,0.12);
+      border:4px solid var(--accent);
+    }
+    .center-photo img{width:100%;height:100%;object-fit:cover}
+    
+    .center-node h2{
+      margin:8px 0 4px 0;
+      font-size:28px;
+      font-weight:700;
+      color:var(--text);
+    }
+    
+    .center-node small{
+      color:var(--muted);
+      font-size:13px;
+      display:block;
+      margin-bottom:8px;
+    }
 
-    /* Positions on desktop */
-    .b1{top:28px;left:18px}
-    .b2{top:28px;right:18px}
-    .b3{bottom:28px;left:18px}
-    .b4{bottom:28px;right:18px}
-    .b5{left:50%;top:8%;transform:translateX(-50%)}
+    /* CV Button */
+    .cv-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 20px;
+      background:linear-gradient(135deg, var(--accent), var(--gray-pastel));
+      border-radius:999px;
+      font-size:14px;
+      font-weight:600;
+      color:var(--text);
+      cursor:pointer;
+      transition:transform .2s ease, box-shadow .2s ease;
+      box-shadow:0 4px 12px rgba(11,22,40,0.1);
+      margin-top:4px;
+    }
+    .cv-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 18px rgba(11,22,40,0.15);
+    }
+    .cv-btn:active{transform:scale(.98)}
 
-    /* Sections - detailed content */
+    /* Bubbles container */
+    .bubbles-container{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:100%;
+      height:100%;
+      pointer-events:none;
+    }
+
+    /* Individual bubbles */
+    .bubble{
+      position:absolute;
+      min-width:140px;
+      max-width:180px;
+      padding:14px 18px;
+      border-radius:999px;
+      background:var(--accent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 8px 24px rgba(11,22,40,0.08);
+      transition:all .25s ease;
+      pointer-events:auto;
+      border:2px solid transparent;
+    }
+    
+    .bubble:hover{
+      transform:scale(1.08);
+      box-shadow:0 12px 32px rgba(11,22,40,0.15);
+      border-color:var(--text);
+      background:linear-gradient(135deg, var(--accent), #a8d5f7);
+    }
+    
+    .bubble:active{transform:scale(1.02)}
+    
+    .bubble span{
+      display:block;
+      font-size:13px;
+      color:var(--text);
+      font-weight:600;
+      text-align:center;
+      line-height:1.3;
+    }
+
+    /* Bubble positions (circular layout) */
+    .b1{top:8%;left:50%;transform:translateX(-50%)}
+    .b2{top:28%;right:8%}
+    .b3{bottom:28%;right:8%}
+    .b4{bottom:8%;left:50%;transform:translateX(-50%)}
+    .b5{top:28%;left:8%}
+
+    /* Connection lines */
+    .line{
+      position:absolute;
+      height:2px;
+      background:linear-gradient(90deg, transparent, var(--gray-pastel), transparent);
+      transform-origin:left center;
+      pointer-events:none;
+      opacity:0.4;
+    }
+
+    /* Detail sections */
     main section{margin-top:20px;background:transparent}
-    .detail{margin-top:22px;padding:22px;background:var(--card);border-radius:14px;box-shadow:0 6px 18px rgba(11,22,40,0.04)}
-    .detail h3{margin-top:0}
-    .detail p{line-height:1.55;color:#24303a}
+    .detail{
+      margin-top:22px;
+      padding:28px;
+      background:var(--card);
+      border-radius:14px;
+      box-shadow:0 6px 18px rgba(11,22,40,0.04);
+    }
+    .detail h3{
+      margin-top:0;
+      font-size:22px;
+      color:var(--text);
+      margin-bottom:16px;
+    }
+    .detail p{
+      line-height:1.7;
+      color:#24303a;
+      font-size:15px;
+    }
 
-    /* Layout for detail inner content */
-    .detail-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
-    .detail-grid img{width:100%;border-radius:12px;object-fit:cover}
+    .detail-grid{
+      display:grid;
+      grid-template-columns:1fr 320px;
+      gap:24px;
+      align-items:start;
+    }
+    .detail-grid img{
+      width:100%;
+      border-radius:12px;
+      object-fit:cover;
+      box-shadow:0 4px 12px rgba(11,22,40,0.08);
+    }
+
+    .nav-indicator{
+      font-size:13px;
+      color:var(--muted);
+      margin-top:16px;
+      display:block;
+    }
+    .nav-indicator a{
+      color:var(--accent);
+      text-decoration:underline;
+    }
+
+    /* Hint text */
+    .hint{
+      position:absolute;
+      bottom:20px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+      width:90%;
+      max-width:400px;
+    }
 
     /* Responsive */
     @media (max-width:880px){
       .wrap{padding:12px}
-      .mindmap-card{padding:20px}
-      .center .photo{width:110px;height:110px}
-      .bubble{position:relative;margin:10px auto;min-width:86%;border-radius:12px}
-      .b1,.b2,.b3,.b4,.b5{position:static;transform:none}
+      .mindmap-card{
+        padding:40px 16px;
+        min-height:auto;
+        flex-direction:column;
+      }
+      
+      .center-photo{width:100px;height:100px}
+      .center-node h2{font-size:24px}
+      
+      .bubbles-container{position:static;transform:none;margin-top:30px}
+      
+      .bubble{
+        position:relative;
+        margin:12px auto;
+        min-width:80%;
+        max-width:90%;
+        border-radius:14px;
+        transform:none !important;
+      }
+      
+      .b1,.b2,.b3,.b4,.b5{
+        position:static;
+        transform:none;
+      }
+      
+      .line{display:none}
+      .hint{position:static;margin-top:20px;transform:none}
+      
+      .detail{padding:20px}
       .detail-grid{grid-template-columns:1fr}
     }
 
-    /* Smooth scroll & anchor highlight */
     html{scroll-behavior:smooth}
-    .nav-indicator{display:inline-block;margin-left:8px;font-size:12px;color:var(--muted)}
-
-    /* Small helper */
-    .hint{font-size:13px;color:var(--muted);margin-top:8px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <div class="avatar" aria-hidden="true">
-        <!-- Remplacez 'photo.jpg' par votre vraie photo -->
-        <img src="photo.jpg" alt="Photo de Lucas Bouzeloc">
-      </div>
-      <div>
-        <h1>Lucas Bouzeloc</h1>
-        <p>Portfolio — CV interactif (QR-friendly)</p>
-      </div>
-    </header>
-
-    <div class="mindmap-card" role="navigation" aria-label="Carte mentale de navigation">
-      <div class="center">
-        <div class="photo"><img src="photo.jpg" alt="Photo de Lucas"></div>
+    <div class="mindmap-card" id="top" role="navigation" aria-label="Carte mentale de navigation">
+      <div class="center-node">
+        <div class="center-photo">
+          <img src="photo.jpg" alt="Photo de Lucas Bouzeloc">
+        </div>
         <h2>LUCAS</h2>
-        <small>Cliquez sur une bulle pour afficher les détails</small>
+        <small>Étudiant en Master Commerce</small>
+        <a href="Lucas_Bouzeloc_CV.pdf" download class="cv-btn">
+          <span>📄</span>
+          <span>Télécharger mon CV</span>
+        </a>
       </div>
 
-      <!-- Bubbles linking to sections below -->
-      <div class="bubble b1" data-target="#passion" tabindex="0" role="link" aria-label="Ma Passion">Ma Passion</div>
-      <div class="bubble b2" data-target="#experiences" tabindex="0" role="link" aria-label="Mes Expériences Professionnelles">Mes Expériences Professionnelles</div>
-      <div class="bubble b3" data-target="#formation" tabindex="0" role="link" aria-label="Ma Formation">Ma Formation</div>
-      <div class="bubble b4" data-target="#competences" tabindex="0" role="link" aria-label="Mes Compétences et Valeurs">Mes Compétences et Valeurs</div>
-      <div class="bubble b5" data-target="#anecdote" tabindex="0" role="link" aria-label="Une Anecdote">Une Anecdote</div>
+      <div class="bubbles-container">
+        <div class="bubble b1" data-target="#passion" tabindex="0" role="button">
+          <span>Ma Passion</span>
+        </div>
+        <div class="bubble b2" data-target="#experiences" tabindex="0" role="button">
+          <span>Mes Expériences Professionnelles</span>
+        </div>
+        <div class="bubble b3" data-target="#competences" tabindex="0" role="button">
+          <span>Mes Compétences et Valeurs</span>
+        </div>
+        <div class="bubble b4" data-target="#anecdote" tabindex="0" role="button">
+          <span>Une Anecdote</span>
+        </div>
+        <div class="bubble b5" data-target="#formation" tabindex="0" role="button">
+          <span>Ma Formation</span>
+        </div>
+      </div>
 
-      <p class="hint">Astuce : sur mobile, faites défiler pour voir les sections détaillées.</p>
+      <p class="hint">👆 Cliquez sur une bulle pour découvrir plus</p>
     </div>
 
     <main>
@@ -117,19 +296,19 @@
           <div class="detail-grid">
             <div>
               <h3>Ma Passion — le Volley-Ball</h3>
-              <p>Ma Passion, le Volley-Ball est une véritable passion que j’ai découverte dès le collège, lorsque j’ai intégré l’Association Sportive.
+              <p>Ma Passion, le Volley-Ball est une véritable passion que j'ai découverte dès le collège, lorsque j'ai intégré l'Association Sportive.
 
-C’est là que j’ai appris les bases de ce sport collectif, la cohésion d’équipe et le plaisir du jeu.
+C'est là que j'ai appris les bases de ce sport collectif, la cohésion d'équipe et le plaisir du jeu.
 
 Malheureusement, cette belle expérience a été interrompue par la période du Covid, qui a mis un frein à ma progression et à mes entraînements.
 
-Après cette pause forcée, j’ai rejoint un petit club familial où j’ai pu retrouver le goût de la compétition et développer mes compétences pendant trois années riches en apprentissage et en partage.
+Après cette pause forcée, j'ai rejoint un petit club familial où j'ai pu retrouver le goût de la compétition et développer mes compétences pendant trois années riches en apprentissage et en partage.
 
-Ces années m’ont permis de consolider ma technique, ma vision du jeu et surtout ma passion pour le volley.
+Ces années m'ont permis de consolider ma technique, ma vision du jeu et surtout ma passion pour le volley.
 
-Depuis le début de cette année, j’ai franchi une nouvelle étape en intégrant un club évoluant au niveau pré-national.
+Depuis le début de cette année, j'ai franchi une nouvelle étape en intégrant un club évoluant au niveau pré-national.
 
-C’est un véritable défi, mais aussi une grande fierté de pouvoir m’entraîner et jouer à un niveau plus élevé, entouré de joueurs expérimentés qui me poussent à me dépasser chaque jour.</p>
+C'est un véritable défi, mais aussi une grande fierté de pouvoir m'entraîner et jouer à un niveau plus élevé, entouré de joueurs expérimentés qui me poussent à me dépasser chaque jour.</p>
               <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
             </div>
             <div>
@@ -165,7 +344,15 @@ C’est un véritable défi, mais aussi une grande fierté de pouvoir m’entra�
           <h3>Mes Expériences Professionnelles</h3>
           <div class="detail-grid">
             <div>
-              <p>Mon parcours professionnel s'est construit autour d'expériences variées mais complémentaires. J'ai d'abord effectué une alternance de deux ans chez Intersport, où j'ai pu découvrirle fonctionnement d'une grande enseigne de sport et développer mes compétences en vente, en relation client et en gestion commerciale. En parallèle, j'ai eu l'opportunité de coacher pendant deux ans une équipe de jeunes volleyeurs, une expérience très enrichissante qui m'a permis d'apprendre à encadrer, motiver et transmettre ma passion pour le sport. Plus récemment, j'ai décidé de me lancer dans l'entrepreneuriat en créant ma propre micro-entreprise spécialisée dans l'achat et la revente de vêtements. Cette activité m'a permis de développer un vrai sens des affaires, de la rigueur et de la créativité dans la gestion d'un projet personnel. Ces différentes expériences m'ont beaucoup appris, tant sur le plan professionnel que personnel, et m'ont donné le goût du travail, de l'initiative et de la responsabilité.
+              <p>Mon parcours professionnel s'est construit autour d'expériences variées mais complémentaires. J'ai d'abord effectué une alternance de deux ans chez Intersport, où j'ai pu découvrir le fonctionnement d'une grande enseigne de sport et développer mes compétences en vente, en relation client et en gestion commerciale. En parallèle, j'ai eu l'opportunité de coacher pendant deux ans une équipe de jeunes volleyeurs, une expérience très enrichissante qui m'a permis d'apprendre à encadrer, motiver et transmettre ma passion pour le sport. Plus récemment, j'ai décidé de me lancer dans l'entrepreneuriat en créant ma propre micro-entreprise spécialisée dans l'achat et la revente de vêtements. Cette activité m'a permis de développer un vrai sens des affaires, de la rigueur et de la créativité dans la gestion d'un projet personnel. Ces différentes expériences m'ont beaucoup appris, tant sur le plan professionnel que personnel, et m'ont donné le goût du travail, de l'initiative et de la responsabilité.</p>
+              <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
+            </div>
+            <div>
+              <img src="experiences.jpg" alt="Illustration expériences">
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- Competences et Valeurs -->
       <section id="competences">
@@ -173,16 +360,16 @@ C’est un véritable défi, mais aussi une grande fierté de pouvoir m’entra�
           <h3>Mes compétences et Valeurs</h3>
           <div class="detail-grid">
             <div>
-              <p>Au fil de mon parcours, j’ai développé un ensemble de compétences et de valeurs qui me 
-                définissent aujourd’hui autant sur le plan professionnel que personnel. Ma rigueur s’est affirmée 
-                grâce à mes études et à mon expérience en alternance, où l’organisation et la précision étaient 
+              <p>Au fil de mon parcours, j'ai développé un ensemble de compétences et de valeurs qui me 
+                définissent aujourd'hui autant sur le plan professionnel que personnel. Ma rigueur s'est affirmée 
+                grâce à mes études et à mon expérience en alternance, où l'organisation et la précision étaient 
                 essentielles. Mon ambition, elle, se nourrit de ma volonté constante de progresser, que ce soit dans 
-                le sport ou dans mes projets professionnels. Le volley m’a appris la valeur du partage et de l’esprit 
-                d’équipe, des qualités que je considère indispensables pour atteindre des objectifs communs. Le 
-                coaching, quant à lui, m’a permis de renforcer ma patience et ma capacité à accompagner les 
-                autres dans leur progression. Enfin, mes différentes expériences m’ont appris à m’adapter à toutes 
+                le sport ou dans mes projets professionnels. Le volley m'a appris la valeur du partage et de l'esprit 
+                d'équipe, des qualités que je considère indispensables pour atteindre des objectifs communs. Le 
+                coaching, quant à lui, m'a permis de renforcer ma patience et ma capacité à accompagner les 
+                autres dans leur progression. Enfin, mes différentes expériences m'ont appris à m'adapter à toutes 
                 les situations, à rester réactif face aux imprévus et à toujours chercher à tirer le meilleur de chaque 
-                opportunité. Ces qualités sont aujourd’hui au cœur de ma façon de travailler et d’évoluer.</p>
+                opportunité. Ces qualités sont aujourd'hui au cœur de ma façon de travailler et d'évoluer.</p>
               <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
             </div>
             <div>
@@ -198,15 +385,15 @@ C’est un véritable défi, mais aussi une grande fierté de pouvoir m’entra�
           <h3>Anecdote</h3>
           <div class="detail-grid">
             <div>
-              <p>Une anecdote qui me représente bien est liée à ma passion pour le volley-ball. J’ai découvert ce 
+              <p>Une anecdote qui me représente bien est liée à ma passion pour le volley-ball. J'ai découvert ce 
                 sport en 2019, au collège, et il est rapidement devenu une véritable vocation. Malheureusement, 
-                après seulement deux mois de pratique, une fracture au bras m’a contraint à m’arrêter pendant 
+                après seulement deux mois de pratique, une fracture au bras m'a contraint à m'arrêter pendant 
                 plusieurs mois. À mon retour, la crise sanitaire liée au Covid-19 a de nouveau interrompu mon 
-                parcours sportif jusqu’en 2021 environ. Malgré ces obstacles, ma motivation n’a jamais faibli. 
-                Depuis, je n’ai cessé de m’entraîner avec détermination, animé par l’envie de progresser et 
-                d’atteindre un niveau national. Cette année, j’ai franchi une nouvelle étape en quittant mon club 
+                parcours sportif jusqu'en 2021 environ. Malgré ces obstacles, ma motivation n'a jamais faibli. 
+                Depuis, je n'ai cessé de m'entraîner avec détermination, animé par l'envie de progresser et 
+                d'atteindre un niveau national. Cette année, j'ai franchi une nouvelle étape en quittant mon club 
                 formateur pour rejoindre une équipe évoluant à un niveau supérieur. Mes objectifs ne sont pas 
-                encore atteints, mais je suis pleinement engagé à continuer de m’entraîner pour y parvenir.</p>
+                encore atteints, mais je suis pleinement engagé à continuer de m'entraîner pour y parvenir.</p>
               <p class="nav-indicator">Retour en haut • <a href="#top">Accueil</a></p>
             </div>
             <div>
@@ -220,17 +407,22 @@ C’est un véritable défi, mais aussi une grande fierté de pouvoir m’entra�
   </div>
 
   <script>
-    // Scroll to the target section when clicking bubbles
     document.querySelectorAll('.bubble').forEach(b => {
       b.addEventListener('click', ()=>{
         const t = document.querySelector(b.dataset.target);
         if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
       });
-      b.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') b.click(); });
+      b.addEventListener('keydown', (e)=>{ 
+        if(e.key==='Enter' || e.key===' ') {
+          e.preventDefault();
+          b.click();
+        }
+      });
     });
 
-    // Improve focus outline for keyboard users
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Tab') document.body.classList.add('show-focus'); });
+    document.addEventListener('keydown', (e)=>{ 
+      if(e.key==='Tab') document.body.classList.add('show-focus'); 
+    });
   </script>
 </body>
 </html>
